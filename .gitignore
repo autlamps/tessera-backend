@@ -1,0 +1,14 @@
+#ignore db
+*.db
+*.sqlite3
+
+#extensions to ignore
+*.log
+*.pot
+*.pyc
+
+#directories to ignore
+.idea/
+
+#ignore
+venv/
