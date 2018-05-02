@@ -14,7 +14,7 @@ class PushNotification(models.Model):
     expire = models.BooleanField(default=False)
 
 
-class Announcements(models.Model):
+class Announcement(models.Model):
     sent_at = models.DateTimeField
     title = models.CharField(max_length=25)
     short_description = models.CharField(max_length=50)

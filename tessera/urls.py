@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django.urls import include
 
 urlpatterns = [
+    url(r'^api/v1/users/', include('ticketing.url.usersapi', namespace='ticketing-api-users')),
     url(r'^admin/', admin.site.urls),
 ]
