@@ -15,7 +15,7 @@ class PushNotification(models.Model):
 
 
 class Announcement(models.Model):
-    sent_at = models.DateTimeField
+    sent_at = models.DateTimeField()
     title = models.CharField(max_length=25)
     short_description = models.CharField(max_length=50)
     long_description = models.CharField(max_length=1000)

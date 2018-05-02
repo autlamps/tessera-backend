@@ -13,6 +13,8 @@ urlpatterns = [
     url(r'^cards/', CardView.as_view(), name="cardview"),
     url(r'^topups/', TopUpView.as_view(), name="topupview"),
     url(r'^trips/', TripView.as_view(), name='tripview'),
-    url(r'^announcements/', AnnouncementView.as_view(), name='announcementview'),
-    url(r'^notifications/', NotificationView.as_view(), name='notificationview')
+    url(r'^announcements/', AnnouncementView.as_view(),
+        name='announcementview'),
+    url(r'^notifications/', NotificationView.as_view(),
+        name='notificationview')
 ]
