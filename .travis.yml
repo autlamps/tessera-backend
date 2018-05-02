@@ -1,15 +1,16 @@
 language: python
-
 python:
-  - "3.6"
+- '3.6'
 
 notifications:
   email: false
+  slack:
+    secure: XZF5E4mc9l9b9borXlmoGOdW5dVFzJRkUZEJU3Kz/CNv/5wQiB+pz0oeYUzGvzB+DCMscuEuGTGry5ApPC4pWHnDTd1T/XrofDd+9Fd2dCleoqLSUfbFRYlNwLCOoZV9QhyIq8HNiDmW1xMPBI2qSOy6L3uL3PJeZVu+67ov88j/MXV4bWYbBViqgqCX2mzGdsFV6twTawSUoCJKmMV1D6ON7aZWjIJHQEH9iz0xDIPs4G4/tVHwsIlv7y+RvTFAeEQCk+DBTjt2vmZn7vfnlRPI2/OVHsvH/n2FUsTF18OU3HQyFDDHwK7sXFZ47sECA+SKlKcI5AEJ9wkGtmqGLxCuYDJjNKNiuR1TlK8vJIW3mdFNp9KQoAfIBfQvYLVWI6HEPaMRy+6I937uZJL6N8bQ55tNgf4mgrSCXhk/0ctXkf5jjob9amIkshjShaqtcpF1lL8djZxRFTa+po68ts4v/HWMeZx0IVlUww4Dc13+A5+/FkjAkg0Qmw1Ec0E7LLKHfOYoktJ7+xxc6/cml1okEoUjzq5/0u/6nDjcoNQAdI/qBz6DnIvY2e7etjLqRU35NOpcp0j9shyPa/C96Zw0c2lGVuuQJlY1nt6l2wjQVSzVTC/pl9sPSXJWyCrtPxpwfgSMlj9tZ8GTiW/qPCsMAJ/jG+2/uIv1gN5ybP8=
 
 install:
-  - pip install pycodestyle
-  - pip install -r requirements.txt
+- pip install pycodestyle
+- pip install -r requirements.txt
 
 script:
-  - pycodestyle --exclude='*migrations/*' ticketing/
-  - python3 manage.py test
+- pycodestyle --exclude='*migrations/*' ticketing/
+- python3 manage.py test
