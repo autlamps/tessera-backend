@@ -4,7 +4,8 @@ import django.contrib.auth
 
 class Account(models.Model):
     # abstraction over User so we can allow multiple sign in methods
-    user = models.ForeignKey(django.contrib.auth.get_user_model(), on_delete=models.CASCADE)
+    user = models.ForeignKey(django.contrib.auth.get_user_model(),
+                             on_delete=models.CASCADE)
 
 
 class PushNotification(models.Model):
@@ -84,8 +85,9 @@ class TopUp(models.Model):
 
 
 class Card(models.Model):
-    # the credit card value is not stored only the token which is the value returned by the payment
-    # processor to represent a card. We use expiry date to remind users to update their card
+    # the credit card value is not stored only the token which is the value
+    # returned by the payment processor to represent a card. We use expiry
+    # date to remind users to update their card
     account = models.ForeignKey('Account', on_delete=models.CASCADE)
     description = models.CharField(max_length=10)
     token = models.CharField(max_length=100)
