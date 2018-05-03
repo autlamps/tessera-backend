@@ -66,10 +66,10 @@ class TopUpView(APIView):
         pass
 
 
-class TripView(mixins.ListModelMixin,
-               generics.GenericAPIView):
+class UsersTripView(mixins.ListModelMixin,
+                    generics.GenericAPIView):
     """
-    TripView allows us to get all trips
+    TripView allows us to get all BalanceTicketTrips the user has taken
     """
 
     def list(self, request, *args, **kwargs):
