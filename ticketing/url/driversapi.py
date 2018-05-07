@@ -2,7 +2,7 @@ from django.conf.urls import url
 
 from ticketing.api.bothviews import PingView, RouteView
 from ticketing.api.driverviews import DriverAuthTokenView, KeysView, \
-    BTTripView, RTTripView
+    BTTripView, RTTripView, TripView
 
 """
 driversapi.py sets up urls for the user api used by the passenger apps
