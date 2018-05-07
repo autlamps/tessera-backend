@@ -19,6 +19,14 @@ class KeysView(APIView):
         pass
 
 
+class TripView(APIView):
+    """
+    TripView creates a new trip view and returns the created trip id
+    """
+
+    def post(self, request, *args, **kwargs):
+        pass
+
 class BTTripView(APIView):
     """
     BTTrip is called by the driver device to "tag" someone on
