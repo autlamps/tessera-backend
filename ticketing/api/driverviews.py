@@ -27,6 +27,7 @@ class TripView(APIView):
     def post(self, request, *args, **kwargs):
         pass
 
+
 class BTTripView(APIView):
     """
     BTTrip is called by the driver device to "tag" someone on
