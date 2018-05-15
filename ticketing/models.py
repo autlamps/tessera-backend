@@ -9,7 +9,8 @@ class Account(models.Model):
 
 
 class PushNotification(models.Model):
-    account = models.ForeignKey('Account', on_delete=models.CASCADE)
+    account = models.ForeignKey('Account', on_delete=models.CASCADE,
+                                related_name='notification_tokens')
     token = models.CharField(max_length=162)
     expire = models.BooleanField(default=False)
 
