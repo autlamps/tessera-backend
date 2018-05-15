@@ -9,3 +9,12 @@ class AnnouncementSerializer(serializers.ModelSerializer):
         model = Announcement
         fields = ('id', 'sent_at', 'title', 'short_description',
                   'long_description')
+
+
+class NotificationTokenSerializer(serializers.Serializer):
+    token = serializers.CharField(required=True)
+
+
+class SuccessSerializer(serializers.Serializer):
+    success = serializers.BooleanField
+    created_id = serializers.CharField

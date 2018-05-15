@@ -5,11 +5,12 @@ import django.contrib.auth
 class Account(models.Model):
     # abstraction over User so we can allow multiple sign in methods
     user = models.ForeignKey(django.contrib.auth.get_user_model(),
-                             on_delete=models.CASCADE)
+                             on_delete=models.CASCADE, related_name='account')
 
 
 class PushNotification(models.Model):
-    account = models.ForeignKey('Account', on_delete=models.CASCADE)
+    account = models.ForeignKey('Account', on_delete=models.CASCADE,
+                                related_name='notification_tokens')
     token = models.CharField(max_length=162)
     expire = models.BooleanField(default=False)
 
