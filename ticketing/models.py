@@ -5,7 +5,7 @@ import django.contrib.auth
 class Account(models.Model):
     # abstraction over User so we can allow multiple sign in methods
     user = models.ForeignKey(django.contrib.auth.get_user_model(),
-                             on_delete=models.CASCADE)
+                             on_delete=models.CASCADE, related_name='account')
 
 
 class PushNotification(models.Model):

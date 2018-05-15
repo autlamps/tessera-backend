@@ -1,19 +1,15 @@
 import datetime
 
 from rest_framework import mixins, generics
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ticketing.api.userserializers import AnnouncementSerializer
-from ticketing.models import Announcement
-
-
-class AuthTokenView(APIView):
-    """
-    AuthTokenView allows a user to login and is given a auth token in reponse
-    """
-
-    def post(self, request, *args, **kwargs):
-        pass
+from ticketing.api.userserializers import AnnouncementSerializer, \
+    NotificationTokenSerializer, SuccessSerializer
+from ticketing.models import Announcement, PushNotification, Account
 
 
 class TicketView(APIView):
@@ -96,6 +92,20 @@ class NotificationView(mixins.CreateModelMixin,
     """
     NotificationView registers a users push notification token
     """
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
-    def create(self, request, *args, **kwargs):
-        pass
+    def post(self, request, *args, **kwargs):
+        tkdata = NotificationTokenSerializer(data=request.data)
+
+        if not tkdata.is_valid():
+            return Response(data={"success": False})
+
+        token = tkdata.validated_data["token"]
+
+        p = PushNotification(account=request.user.account.all()[0],
+                             token=token)
+        p.save()
+
+        return Response(data={"success": True, "created_id": p.id})
+
