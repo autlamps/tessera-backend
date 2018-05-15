@@ -5,6 +5,9 @@ from rest_framework import generics, mixins
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from ticketing.api.bothserializers import RouteSerializer
+from ticketing.models import Route
+
 
 class PingView(APIView):
     """
@@ -18,12 +21,9 @@ class PingView(APIView):
         return Response(pong, status=200)
 
 
-class RouteView(mixins.ListModelMixin, generics.GenericAPIView):
+class RouteView(generics.ListAPIView):
     """
     RouteView returns all routes
     """
-
-    # TODO: setup queryset and serializer
-
-    def list(self, request, *args, **kwargs):
-        pass
+    serializer_class = RouteSerializer
+    queryset = Route.objects.all()

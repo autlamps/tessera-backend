@@ -1,6 +1,8 @@
 from django.conf.urls import url
 from rest_framework.authtoken.views import obtain_auth_token
 
+
+from ticketing.api.bothviews import RouteView
 from ticketing.api.userviews import TicketView, CardView, \
     TopUpView, UsersTripView, AnnouncementView, NotificationView
 
@@ -17,5 +19,6 @@ urlpatterns = [
     url(r'^announcements/', AnnouncementView.as_view(),
         name='announcementview'),
     url(r'^notifications/', NotificationView.as_view(),
-        name='notificationview')
+        name='notificationview'),
+    url(r'^routes/', RouteView.as_view(), name='routeview')
 ]
