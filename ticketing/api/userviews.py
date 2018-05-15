@@ -108,4 +108,3 @@ class NotificationView(mixins.CreateModelMixin,
         p.save()
 
         return Response(data={"success": True, "created_id": p.id})
-

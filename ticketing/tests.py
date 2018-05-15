@@ -35,6 +35,3 @@ class CreateNotificationTestCase(TestCase):
 
         self.assertIsNotNone(push)
         self.assertEqual(resp_dict['created_id'], push.id)
-
-
-
