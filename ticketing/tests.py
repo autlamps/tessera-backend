@@ -7,10 +7,17 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 from ticketing.api.userviews import NotificationView
+<<<<<<< HEAD
 from ticketing.models import BalanceTicket
 from ticketing.userticket.createqrcode import QRCode
 from ticketing.models import Account, Driver
 from ticketing.driverauth.driverauthtoken import DriverAuth, BadTokenError
+=======
+from ticketing.models import Account, BalanceTicket, Driver
+from ticketing.userticket.createqrcode import QRCode
+from ticketing.driverauth.driverauthtoken import DriverAuth, BadTokenError
+from django.core.exceptions import ObjectDoesNotExist
+>>>>>>> Added driver auth lib with tests
 
 
 class DriverIdTestCase(TestCase):
@@ -23,25 +30,40 @@ class DriverIdTestCase(TestCase):
         auth = DriverAuth()
         token = auth.createtoken(self.driver.id)
         if token != "MS43cjJGQXB4SjZOcmZsb01fQjUteWY0MC1PeEU=":
+<<<<<<< HEAD
             self.fail("Token doesn't match expected. Got " + token +
                       " expected MS43cjJGQXB4SjZOcmZsb01fQjUteWY0MC1PeEU=")
+=======
+            self.fail("Token doesn't match expected. Got "+token+" expected MS43cjJGQXB4SjZOcmZsb01fQjUteWY0MC1PeEU=")
+
+>>>>>>> Added driver auth lib with tests
 
     def test_verify_token_pass(self):
         auth = DriverAuth()
         try:
+<<<<<<< HEAD
             verify = auth.verifytoken("MS43cjJGQXB4SjZOcmZsb01fQjUt"
                                       "eWY0MC1PeEU=")
             if verify.id != self.driver.id:
                 self.fail("Driver id is differnt expected: " + verify.id +
                           " got: " + self.driver.id)
+=======
+            verify = auth.verifytoken("MS43cjJGQXB4SjZOcmZsb01fQjUteWY0MC1PeEU=")
+            if verify.id != self.driver.id:
+                self.fail("Driver id is differnt expected: " + verify.id + " got: " + self.driver.id)
+>>>>>>> Added driver auth lib with tests
         except BadTokenError:
             self.fail("Object does no exist")
 
     def test_very_token_fail(self):
         auth = DriverAuth()
         try:
+<<<<<<< HEAD
             verify = auth.verifytoken("MS43cjJGQXB4Sj"
                                       "ZOcmZsb01fQjUteWY0MC1PeXX=")
+=======
+            verify = auth.verifytoken("MS43cjJGQXB4SjZOcmZsb01fQjUteWY0MC1PeXX=")
+>>>>>>> Added driver auth lib with tests
             # should only reach here if verify function is incorrect
             self.fail("Incorrect token was verified")
         except BadTokenError:

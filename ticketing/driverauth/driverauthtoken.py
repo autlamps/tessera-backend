@@ -15,7 +15,8 @@ class BadTokenError(Exception):
     pass
 
 
-class DriverAuth:
+class DriverAuth():
+
 
     def __init__(self):
         if settings.SECRET_KEY is None:
