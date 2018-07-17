@@ -1,5 +1,6 @@
 import json
 
+
 from django.contrib.auth.models import User
 from django.test import TestCase
 
@@ -7,7 +8,45 @@ from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 
 from ticketing.api.userviews import NotificationView
-from ticketing.models import Account
+from ticketing.models import Account, Driver
+from ticketing.driverauth.driverauthtoken import DriverAuth, BadTokenError
+from django.core.exceptions import ObjectDoesNotExist
+
+
+
+class DriverIdTestCase(TestCase):
+
+    def setUp(self):
+        self.driver = Driver(name="Bobby Tables", pin=1234)
+        self.driver.save()
+
+    def test_create_token(self):
+        auth = DriverAuth()
+        token = auth.createtoken(self.driver.id)
+        if token != "MS43cjJGQXB4SjZOcmZsb01fQjUteWY0MC1PeEU=":
+            self.fail("Token doesn't match expected. Got "+token+" expected MS43cjJGQXB4SjZOcmZsb01fQjUteWY0MC1PeEU=")
+
+
+    def test_verify_token_pass(self):
+        auth = DriverAuth()
+        try:
+            verify = auth.verifytoken("MS43cjJGQXB4SjZOcmZsb01fQjUteWY0MC1PeEU=")
+            if verify.id != self.driver.id:
+                self.fail("Driver id is differnt expected: " + verify.id + " got: " + self.driver.id)
+        except BadTokenError:
+            self.fail("Object does no exist")
+
+    def test_very_token_fail(self):
+        auth = DriverAuth()
+        try:
+            verify = auth.verifytoken("MS43cjJGQXB4SjZOcmZsb01fQjUteWY0MC1PeXX=")
+            # should only reach here if verify function is incorrect
+            self.fail("Incorrect token was verified")
+        except BadTokenError:
+            pass
+
+#f1 verify works
+#f2 verify breaks with incorrect token
 
 
 class CreateNotificationTestCase(TestCase):
