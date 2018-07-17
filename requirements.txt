@@ -17,3 +17,5 @@ requests==2.19.1
 rsa==3.4.2
 uritemplate==3.0.0
 urllib3==1.23
+itsdangerous==0.24
+pytz==2018.4
