@@ -1,5 +1,6 @@
 from django.conf.urls import url
 from rest_framework.authtoken.views import obtain_auth_token
+from ticketing import views
 
 
 from ticketing.api.bothviews import RouteView

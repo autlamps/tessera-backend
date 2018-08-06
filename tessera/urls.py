@@ -19,5 +19,6 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^api/v1/users/', include('ticketing.url.usersapi')),
     url(r'^api/v1/drivers/', include('ticketing.url.driversapi')),
+    url(r'^test/', include('ticketing.url.testurls')),
     url(r'^admin/', admin.site.urls),
 ]

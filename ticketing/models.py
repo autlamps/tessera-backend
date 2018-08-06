@@ -41,9 +41,10 @@ class Trip(models.Model):
 
 
 class BalanceTicket(models.Model):
-    account = models.ForeignKey('Account', on_delete=models.CASCADE)
+    account = models.ForeignKey('Account', related_name='balance_ticket',
+                                on_delete=models.CASCADE)
     current_value = models.FloatField()
-    qr_code = models.UUIDField()
+    qr_code_id = models.UUIDField()
 
 
 class BalanceTicketTrip(models.Model):
@@ -67,6 +68,7 @@ class RideTicket(models.Model):
     qr_code = models.UUIDField()
     created_at = models.DateTimeField()
     valid_for = models.ManyToManyField('Route')
+    short_name = models.CharField(max_length=10)
 
 
 class RideTicketTrip(models.Model):
