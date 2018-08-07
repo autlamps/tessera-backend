@@ -1,6 +1,7 @@
 import base64
 
 from itsdangerous import Signer
+from rest_framework.authentication import BaseAuthentication
 
 from tessera import settings
 
