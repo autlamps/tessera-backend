@@ -1,5 +1,9 @@
+import time
 import datetime
+import uuid
 
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse
 from rest_framework import mixins, generics
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -8,8 +12,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from ticketing.api.userserializers import AnnouncementSerializer, \
-    NotificationTokenSerializer, SuccessSerializer
-from ticketing.models import Announcement, PushNotification, Account
+    NotificationTokenSerializer, SuccessSerializer, TicketSerializer
+from ticketing.models import Announcement, PushNotification, BalanceTicket
+from ticketing.userticket.createqrcode import QRCode
 
 
 class TicketView(APIView):
@@ -18,8 +23,19 @@ class TicketView(APIView):
     request a new qr code via the PATCH method
     """
 
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
     def get(self, request, *args, **kwargs):
-        pass
+        try:
+            bt = request.user.account.all()[0].balance_ticket.all()[0]
+            serializer = TicketSerializer(bt)
+            return JsonResponse(data=serializer.data)
+        except ObjectDoesNotExist:
+            qr = uuid.uuid4
+            BalanceTicket(account=request.user.account.all()[0],
+                          current_value=0, qrcode=qr)
+            return JsonResponse(data={"error": "true"}, status=400)
 
     def patch(self, request, *args, **kwargs):
         pass
