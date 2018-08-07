@@ -13,7 +13,7 @@ from rest_framework.views import APIView
 
 from ticketing.api.userserializers import AnnouncementSerializer, \
     NotificationTokenSerializer, SuccessSerializer, TicketSerializer
-from ticketing.models import Announcement, PushNotification, Account, BalanceTicket
+from ticketing.models import Announcement, PushNotification, BalanceTicket
 from ticketing.userticket.createqrcode import QRCode
 
 
@@ -28,12 +28,13 @@ class TicketView(APIView):
 
     def get(self, request, *args, **kwargs):
         try:
-            bt=request.user.account.all()[0].balance_ticket.all()[0]
+            bt = request.user.account.all()[0].balance_ticket.all()[0]
             serializer = TicketSerializer(bt)
             return JsonResponse(data=serializer.data)
         except ObjectDoesNotExist:
             qr = uuid.uuid4
-            BalanceTicket(account=request.user.account.all()[0], current_value=0, qrcode=qr)
+            BalanceTicket(account=request.user.account.all()[0],
+                          current_value=0, qrcode=qr)
             return JsonResponse(data={"error": "true"}, status=400)
 
     def patch(self, request, *args, **kwargs):

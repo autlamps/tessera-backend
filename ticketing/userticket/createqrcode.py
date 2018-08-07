@@ -6,12 +6,15 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from ticketing.models import BalanceTicket, RideTicket
 
+
 class VerifyFailedError(Exception):
     pass
 
+
 class QRCode:
     """
-    QRCode creator is used to create a user ticket/balance ID, which is then signed and then returned
+    QRCode creator is used to create a user ticket/balance ID,
+    which is then signed and then returned
     """
 
     # Refactor to QR Factory
@@ -59,7 +62,8 @@ class QRCode:
 
     def __sign(self, uid, type, val, name):
         tosign = str(uid) + '.' + type + '.' + val + '.' + name
-        signed = base64.b64encode(rsa.sign(tosign.encode('UTF-8'), self.private, 'SHA-256'))
+        signed = base64.b64encode(rsa.sign(tosign.encode('UTF-8'),
+                                           self.private, 'SHA-256'))
         toreturn = str(tosign) + ':' + str(signed.decode('UTF-8'))
         self.ID = toreturn
         return toreturn
@@ -75,7 +79,7 @@ class QRCode:
             ticketType = user[1]
             if ticketType == "b":
                 try:
-                    ticket = BalanceTicket.objects.get(qr_code=uuid)
+                    ticket = BalanceTicket.objects.get(qr_code_id=uuid)
                     return {"ticket": ticket, "type": ticketType}
                 except ObjectDoesNotExist:
                     raise VerifyFailedError()

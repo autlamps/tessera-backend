@@ -51,7 +51,8 @@ class SignTestCase(TestCase):
         Account(user=self.user).save()
         self.acc = self.user.account.all()[0]
 
-        self.bt = BalanceTicket(account=self.acc, current_value=10, qr_code_id="716190a3-849a-4d4a-a0a2-020cf40bda7d")
+        self.bt = BalanceTicket(account=self.acc, current_value=10,
+                                qr_code_id="716190a3-849a-4d4a-a0a2-020cf40bda7d")
         self.bt.save()
 
     def testSigning(self):
@@ -73,7 +74,8 @@ class SignTestCase(TestCase):
         qrcode = ticket['ticket'].qr_code_id
         type = ticket['type']
         if str(qrcode) != self.bt.qr_code_id:
-            self.fail("The QR code is not the set one, got : " + qrcode.__str__())
+            self.fail("The QR code is not the set one, got : "
+                      + qrcode.__str__())
         if type != "b":
             self.fail("The type of ticket is not b, got : " + type)
 
@@ -95,9 +97,11 @@ class SignTestCase(TestCase):
         footer = pub[-28:]
         pubkey = header + "\n" + body + footer
         public = rsa.PublicKey.load_pkcs1(pubkey)
-        signed = base64.b64encode(rsa.sign(testSignature.encode('UTF-8'), private, 'SHA-256'))
+        signed = base64.b64encode(rsa.sign(testSignature.encode('UTF-8'),
+                                           private, 'SHA-256'))
         if testSignature is signed:
-            self.fail("The hashed message is incorrect, we got : " + signed.__str__())
+            self.fail("The hashed message is incorrect, we got : "
+                      "" + signed.__str__())
         else:
             hash = base64.b64decode(signed)
             try:
