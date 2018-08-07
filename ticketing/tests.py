@@ -23,7 +23,7 @@ class DriverIdTestCase(TestCase):
         auth = DriverAuth()
         token = auth.createtoken(self.driver.id)
         if token != "MS43cjJGQXB4SjZOcmZsb01fQjUteWY0MC1PeEU=":
-            self.fail("Token doesn't match expected. Got "+token+
+            self.fail("Token doesn't match expected. Got " + token +
                       " expected MS43cjJGQXB4SjZOcmZsb01fQjUteWY0MC1PeEU=")
 
     def test_verify_token_pass(self):
