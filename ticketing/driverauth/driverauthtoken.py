@@ -1,7 +1,6 @@
 import base64
 
 from itsdangerous import Signer
-from rest_framework.authentication import BaseAuthentication
 
 from tessera import settings
 
@@ -16,7 +15,7 @@ class BadTokenError(Exception):
     pass
 
 
-class DriverAuth():
+class DriverAuth:
 
 
     def __init__(self):

@@ -146,3 +146,4 @@ class SignTestCase(TestCase):
 
             except rsa.VerificationError:
                 self.fail("We are unable to verify the hashed message")
+
