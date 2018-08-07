@@ -52,7 +52,8 @@ class SignTestCase(TestCase):
         self.acc = self.user.account.all()[0]
 
         self.bt = BalanceTicket(account=self.acc, current_value=10,
-                                qr_code_id="716190a3-849a-4d4a-a0a2-020cf40bda7d")
+                                qr_code_id=
+                                "716190a3-849a-4d4a-a0a2-020cf40bda7d")
         self.bt.save()
 
     def testSigning(self):
