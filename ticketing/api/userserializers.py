@@ -36,6 +36,7 @@ class TicketSerializer(serializers.ModelSerializer):
     def get_qr_code(self, obj):
         return QRCode().createbtqrcode(btticket=obj)
 
+
 class TripSerializer(serializers.ModelSerializer):
     trip_name = serializers.SerializerMethodField()
     trip_start = serializers.SerializerMethodField()
