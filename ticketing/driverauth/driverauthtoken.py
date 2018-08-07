@@ -1,7 +1,6 @@
 import base64
 
 from itsdangerous import Signer
-from rest_framework.authentication import BaseAuthentication
 
 from tessera import settings
 
@@ -16,7 +15,7 @@ class BadTokenError(Exception):
     pass
 
 
-class DriverAuth():
+class DriverAuth:
 
     def __init__(self):
         if settings.SECRET_KEY is None:
@@ -28,7 +27,8 @@ class DriverAuth():
         return base64.b64encode(token).decode('UTF-8')
 
     def verifytoken(self, token):
-        """Returns if the token is valid otherwise, returns throws does not exist exception"""
+        """Returns if the token is valid otherwise, returns throws does not
+        exist exception """
         try:
             bytesToken = base64.b64decode(token.encode())
             id = self.s.unsign(bytesToken)
@@ -48,13 +48,3 @@ class DriverAuthenticate(authentication.BaseAuthentication):
             return DriverAuth().verifytoken(username)
         except BadTokenError:
             raise exceptions.AuthenticationFailed("Bad Token Error")
-
-
-
-
-
-
-#check header (driver token) X_DriverToken [/]
-#verify token
-#return driver object
-#or driver none, failed exception

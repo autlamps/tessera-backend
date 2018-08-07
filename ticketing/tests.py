@@ -5,7 +5,7 @@ from rest_framework.test import APIRequestFactory, force_authenticate
 from ticketing.api.userviews import NotificationView
 from ticketing.models import Account, Driver
 from ticketing.driverauth.driverauthtoken import DriverAuth, BadTokenError
-from django.core.exceptions import ObjectDoesNotExist
+
 
 class DriverIdTestCase(TestCase):
 
@@ -17,7 +17,7 @@ class DriverIdTestCase(TestCase):
         auth = DriverAuth()
         token = auth.createtoken(self.driver.id)
         if token != "MS43cjJGQXB4SjZOcmZsb01fQjUteWY0MC1PeEU=":
-            self.fail("Token doesn't match expected. Got "+token+
+            self.fail("Token doesn't match expected. Got " + token +
                       " expected MS43cjJGQXB4SjZOcmZsb01fQjUteWY0MC1PeEU=")
 
     def test_verify_token_pass(self):
@@ -41,8 +41,6 @@ class DriverIdTestCase(TestCase):
         except BadTokenError:
             pass
 
-#f1 verify works
-#f2 verify breaks with incorrect token
 
 class CreateNotificationTestCase(TestCase):
 
