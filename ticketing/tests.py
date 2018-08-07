@@ -77,7 +77,8 @@ class SignTestCase(TestCase):
             self.fail("The QR code is not the set one, got : "
                       + qrcode.__str__())
         if type != "b":
-            self.fail("The type of ticket is not b, got : " + type)
+            self.fail("The type of ticket is not b, got : "
+                      + type)
 
     def testPublicKey(self):
         testSignature = "This is a test"
