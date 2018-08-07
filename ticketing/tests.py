@@ -51,7 +51,7 @@ class SignTestCase(TestCase):
         Account(user=self.user).save()
         self.acc = self.user.account.all()[0]
 
-        self.bt = BalanceTicket(account=self.acc, current_value=10, qr_code="716190a3-849a-4d4a-a0a2-020cf40bda7d")
+        self.bt = BalanceTicket(account=self.acc, current_value=10, qr_code_id="716190a3-849a-4d4a-a0a2-020cf40bda7d")
         self.bt.save()
 
     def testSigning(self):
@@ -70,7 +70,7 @@ class SignTestCase(TestCase):
     def testVerifying(self):
         signed = self.qrfactory.createbtqrcode(self.bt)
         ticket = self.qrfactory.verify(signed)
-        qrcode = ticket['ticket'].qr_code
+        qrcode = ticket['ticket'].qr_code_id
         type = ticket['type']
         if str(qrcode) != self.bt.qr_code_id:
             self.fail("The QR code is not the set one, got : " + qrcode.__str__())
