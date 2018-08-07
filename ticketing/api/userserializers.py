@@ -23,7 +23,6 @@ class SuccessSerializer(serializers.Serializer):
 
 
 class TicketSerializer(serializers.ModelSerializer):
-    qr_code = serializers.CharField()
     ttl = serializers.SerializerMethodField()
     qr_code = serializers.SerializerMethodField()
 
