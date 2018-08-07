@@ -12,7 +12,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from ticketing.api.userserializers import AnnouncementSerializer, \
-    NotificationTokenSerializer, SuccessSerializer, TripSerializer, TicketSerializer
+    NotificationTokenSerializer, SuccessSerializer, TripSerializer, \
+    TicketSerializer
 from ticketing.models import Announcement, PushNotification, Account, \
     BalanceTicketTrip, BalanceTicket
 
@@ -90,8 +91,10 @@ class UsersTripView(generics.GenericAPIView, mixins.ListModelMixin):
         return self.list(request, *args, **kwargs)
 
     def get_queryset(self):
-        balance_ticket = self.request.user.account.all()[0].balance_ticket.all()[0]
+        balance_ticket = \
+            self.request.user.account.all()[0].balance_ticket.all()[0]
         return BalanceTicketTrip.objects.filter(ticket_id=balance_ticket.id)
+
 
 class AnnouncementView(mixins.ListModelMixin,
                        generics.GenericAPIView):
