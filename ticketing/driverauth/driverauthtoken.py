@@ -1,12 +1,15 @@
 import base64
 
 from itsdangerous import Signer
+from rest_framework.authentication import BaseAuthentication
 
 from tessera import settings
 
 from ticketing.models import Driver
 from itsdangerous import BadSignature
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework import authentication
+from rest_framework import exceptions
 
 
 class BadTokenError(Exception):
@@ -35,7 +38,23 @@ class DriverAuth():
             raise BadTokenError()
 
 
-#get token [x]
-#check the token against existing tokens
+class DriverAuthenticate(authentication.BaseAuthentication):
+
+    def authenticateheader(self, request):
+        username = request.META.get("X_DRIVER_TOKEN")
+        if not username:
+            return None
+        try:
+            return DriverAuth().verifytoken(username)
+        except BadTokenError:
+            raise exceptions.AuthenticationFailed("Bad Token Error")
+
+
+
+
+
+
+#check header (driver token) X_DriverToken [/]
+#verify token
 #return driver object
-#else throw error
+#or driver none, failed exception
