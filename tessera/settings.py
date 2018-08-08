@@ -127,8 +127,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-
-STATIC_URL = '/static/'
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 
 PUBLIC_KEY = os.environ.get('PUBLIC_KEY', '')
 PRIVATE_KEY = os.environ.get('PRIVATE_KEY', '')
