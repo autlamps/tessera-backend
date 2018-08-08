@@ -130,5 +130,13 @@ USE_TZ = True
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 
+STATIC_URL = '/static/'
+
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    # static file location relative to settings.py
+    os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'static')),
+)
+
 PUBLIC_KEY = os.environ.get('PUBLIC_KEY', '')
 PRIVATE_KEY = os.environ.get('PRIVATE_KEY', '')
