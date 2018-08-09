@@ -111,13 +111,13 @@ class AnnouncementView(mixins.ListModelMixin,
         return self.list(request, *args, **kwargs)
 
 
-class NotificationView(mixins.CreateModelMixin,
-                       generics.GenericAPIView):
+class NotificationView(generics.GenericAPIView):
     """
     NotificationView registers a users push notification token
     """
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
+    serializer_class = NotificationTokenSerializer
 
     def post(self, request, *args, **kwargs):
         tkdata = NotificationTokenSerializer(data=request.data)
