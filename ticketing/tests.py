@@ -6,7 +6,6 @@ from ticketing.api.userviews import NotificationView
 from ticketing.models import Account, Driver
 from ticketing.driverauth.driverauthtoken import DriverAuth, BadTokenError
 
-
 class DriverIdTestCase(TestCase):
 
     def setUp(self):
@@ -26,7 +25,7 @@ class DriverIdTestCase(TestCase):
             verify = auth.verifytoken("MS43cjJGQXB4SjZOcmZsb01fQjUt"
                                       "eWY0MC1PeEU=")
             if verify.id != self.driver.id:
-                self.fail("Driver id is differnt expected: " + verify.id +
+                self.fail("Driver id is different expected: " + verify.id +
                           " got: " + self.driver.id)
         except BadTokenError:
             self.fail("Object does no exist")
@@ -34,12 +33,17 @@ class DriverIdTestCase(TestCase):
     def test_very_token_fail(self):
         auth = DriverAuth()
         try:
-            verify = auth.verifytoken("MS43cjJGQXB4Sj"
-                                      "ZOcmZsb01fQjUteWY0MC1PeXX=")
+            verify = auth.verifytoken("MS43cjJGQXB4SjZOcmZsb01fQjUte"
+                                      "WY0MC1PeXX=")
+
+            if verify.id is self.driver.id:
+                pass
             # should only reach here if verify function is incorrect
-            self.fail("Incorrect token was verified")
+            self.fail("Token doesn't match expected. Got " + auth.__str__() +
+                      " expected incorrect token")
         except BadTokenError:
-            pass
+            print()
+            self.fail("Object does not exist")
 
 
 class CreateNotificationTestCase(TestCase):
