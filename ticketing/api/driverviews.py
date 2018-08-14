@@ -26,7 +26,8 @@ class DriverAuthTokenView(APIView):
 
             return Response(data={"success": True, "token": token})
         except ObjectDoesNotExist:
-            return Response(data={"success": False, "reason": "Driver not found"})
+            return Response(data={"success": False,
+                                  "reason": "Driver not found"})
 
     def get(self, request, *args, **kwargs):
         drivers = Driver.objects.all()
