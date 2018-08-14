@@ -11,8 +11,11 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import dj_database_url
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -20,12 +23,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '^ai9v(kjl-^*y$**0h(#kb0-@19an+*35tnlk!+3c(y%^n466r'
+SECRET_KEY = os.environ.get('KEY', '')
+
+if SECRET_KEY == '':
+    sys.exit('No secret key set!')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', os.environ.get('HOSTNAME', '')]
 
 
 # Application definition
@@ -83,6 +89,8 @@ DATABASES = {
     }
 }
 
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -119,5 +127,16 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 
 STATIC_URL = '/static/'
+
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    # static file location relative to settings.py
+    os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'static')),
+)
+
+PUBLIC_KEY = os.environ.get('PUBLIC_KEY', '')
+PRIVATE_KEY = os.environ.get('PRIVATE_KEY', '')

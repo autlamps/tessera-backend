@@ -1,5 +1,9 @@
+import time
 import datetime
+import uuid
 
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse
 from rest_framework import mixins, generics
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -8,8 +12,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from ticketing.api.userserializers import AnnouncementSerializer, \
-    NotificationTokenSerializer, SuccessSerializer
-from ticketing.models import Announcement, PushNotification, Account
+    NotificationTokenSerializer, SuccessSerializer, TripSerializer, \
+    TicketSerializer
+from ticketing.models import Announcement, PushNotification, Account, \
+    BalanceTicketTrip, BalanceTicket
 
 
 class TicketView(APIView):
@@ -18,8 +24,19 @@ class TicketView(APIView):
     request a new qr code via the PATCH method
     """
 
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
     def get(self, request, *args, **kwargs):
-        pass
+        try:
+            bt = request.user.account.all()[0].balance_ticket.all()[0]
+            serializer = TicketSerializer(bt)
+            return JsonResponse(data=serializer.data)
+        except ObjectDoesNotExist:
+            qr = uuid.uuid4
+            BalanceTicket(account=request.user.account.all()[0],
+                          current_value=0, qrcode=qr)
+            return JsonResponse(data={"error": "true"}, status=400)
 
     def patch(self, request, *args, **kwargs):
         pass
@@ -62,14 +79,21 @@ class TopUpView(APIView):
         pass
 
 
-class UsersTripView(mixins.ListModelMixin,
-                    generics.GenericAPIView):
+class UsersTripView(generics.GenericAPIView, mixins.ListModelMixin):
     """
     TripView allows us to get all BalanceTicketTrips the user has taken
     """
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+    serializer_class = TripSerializer
 
-    def list(self, request, *args, **kwargs):
-        pass
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def get_queryset(self):
+        balance_ticket = \
+            self.request.user.account.all()[0].balance_ticket.all()[0]
+        return BalanceTicketTrip.objects.filter(ticket_id=balance_ticket.id)
 
 
 class AnnouncementView(mixins.ListModelMixin,
@@ -87,13 +111,13 @@ class AnnouncementView(mixins.ListModelMixin,
         return self.list(request, *args, **kwargs)
 
 
-class NotificationView(mixins.CreateModelMixin,
-                       generics.GenericAPIView):
+class NotificationView(generics.GenericAPIView):
     """
     NotificationView registers a users push notification token
     """
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
+    serializer_class = NotificationTokenSerializer
 
     def post(self, request, *args, **kwargs):
         tkdata = NotificationTokenSerializer(data=request.data)
