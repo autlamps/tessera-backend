@@ -12,3 +12,6 @@
 
 #ignore
 venv/
+
+#ignore travis deploy.key
+deploy.key
