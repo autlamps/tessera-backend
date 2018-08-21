@@ -15,19 +15,13 @@ class BadTokenError(Exception):
     pass
 
 
-class BadSignatureError(Exception):
-    print("There has been an error with signing")
-
-
 class DriverAuth:
 
-    def __init__(self, testing=False):
-        if not testing:
-            if settings.SECRET_KEY is None:
-                raise Exception("secret key not set")
-            self.s = Signer(settings.SECRET_KEY)
-        else:
-            self.s = Signer("thisisasecertkey")
+    def __init__(self, secret_key=settings.SECRET_KEY):
+        if secret_key is None:
+            raise Exception("secret key not set")
+
+        self.s = Signer(secret_key)
 
     def createtoken(self, id):
         token = self.s.sign(str(id).encode())
@@ -41,10 +35,8 @@ class DriverAuth:
             id = self.s.unsign(bytesToken)
             driver = Driver.objects.get(pk=id)
             return driver
-        except ObjectDoesNotExist:
-            raise ObjectDoesNotExist
-        except BadSignature:
-            raise BadSignatureError()
+        except (ObjectDoesNotExist, BadSignature):
+            raise BadTokenError()
 
 
 class DriverAuthenticate(authentication.BaseAuthentication):

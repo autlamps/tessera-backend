@@ -11,6 +11,7 @@ from ticketing.models import Account, BalanceTicket, Driver
 from ticketing.userticket.createqrcode import QRCode
 from ticketing.driverauth.driverauthtoken import DriverAuth, BadTokenError
 
+
 class DriverIdTestCase(TestCase):
 
     def setUp(self):
@@ -18,37 +19,37 @@ class DriverIdTestCase(TestCase):
         self.driver.save()
 
     def test_create_token(self):
-        auth = DriverAuth()
+        auth = DriverAuth(secret_key="thisisatest")
         token = auth.createtoken(self.driver.id)
-        if token != "MS43cjJGQXB4SjZOcmZsb01fQjUteWY0MC1PeEU=":
+        if token != "MS45LU03aF9sUVVDVEZYVDRDOGZ5WFF0TlhYMVk=":
             self.fail("Token doesn't match expected. Got " + token +
-                      " expected MS43cjJGQXB4SjZOcmZsb01fQjUteWY0MC1PeEU=")
+                      " expected MS45LU03aF9sUVVDVEZYVDRDOGZ5WFF0TlhYMVk=")
 
     def test_verify_token_pass(self):
-        auth = DriverAuth()
+        auth = DriverAuth(secret_key="thisisatest")
         try:
-            verify = auth.verifytoken("MS43cjJGQXB4SjZOcmZsb01fQjUt"
-                                      "eWY0MC1PeEU=")
+            verify = auth.verifytoken("MS45LU03aF9sUVVDVEZYV"
+                                      "DRDOGZ5WFF0TlhYMVk=")
             if verify.id != self.driver.id:
                 self.fail("Driver id is different expected: " + verify.id +
                           " got: " + self.driver.id)
+            else:
+                pass
         except BadTokenError:
-            self.fail("Object does no exist")
+            self.fail("Object does not exist")
 
     def test_very_token_fail(self):
-        auth = DriverAuth()
+        auth = DriverAuth(secret_key="thisisiatest")
         try:
-            verify = auth.verifytoken("MS43cjJGQXB4SjZOcmZsb01fQjUte"
-                                      "WY0MC1PeXX=")
+            verify = auth.verifytoken("MS43cjJGQXB4SjZOcmZsb01fQj"
+                                      "UteWY0MC1PeXX=")
 
             if verify.id is self.driver.id:
                 pass
             # should only reach here if verify function is incorrect
-            self.fail("Token doesn't match expected. Got " + auth.__str__() +
-                      " expected incorrect token")
+            self.fail("Exec continued")
         except BadTokenError:
-            print()
-            self.fail("Object does not exist")
+            pass
 
 
 class CreateNotificationTestCase(TestCase):
@@ -150,4 +151,3 @@ class SignTestCase(TestCase):
 
             except rsa.VerificationError:
                 self.fail("We are unable to verify the hashed message")
-
