@@ -3,7 +3,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from ticketing.driverauth.driverauthtoken import DriverAuth
 from ticketing.models import Driver
-from ticketing.api.driverserializers import DriverSerializer
+from ticketing.api.driverserializers import DriverSerializer, \
+    DriverAuthSerializer
 
 
 class DriverAuthTokenView(APIView):
@@ -12,7 +13,7 @@ class DriverAuthTokenView(APIView):
     """
 
     def post(self, request, *args, **kwargs):
-        divdata = DriverAuthTokenView(data=request.data)
+        divdata = DriverAuthSerializer(data=request.data)
 
         if not divdata.is_valid():
             return Response(data={"success": False})
