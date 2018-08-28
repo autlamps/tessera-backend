@@ -1,11 +1,23 @@
+<<<<<<< HEAD:ticketing/tests/signing.py
+=======
+import json
+
+import datetime
+import rsa
+>>>>>>> Adding files, and adding methods to existing files:ticketing/tests.py
 import base64
 from unittest import TestCase
 
 import rsa
 from django.contrib.auth.models import User
 
+<<<<<<< HEAD:ticketing/tests/signing.py
 from tessera import settings
 from ticketing.models import Account, BalanceTicket
+=======
+from ticketing.models import Account, BalanceTicket, Driver, Route
+from ticketing.trip.createtrip import TripCreator
+>>>>>>> Adding files, and adding methods to existing files:ticketing/tests.py
 from ticketing.userticket.createqrcode import QRCode
 
 
@@ -81,3 +93,25 @@ class SignTestCase(TestCase):
 
             except rsa.VerificationError:
                 self.fail("We are unable to verify the hashed message")
+
+
+class TripTestCase(TestCase):
+
+    def setUp(self):
+        self.driver = Driver(name="Bobby Tables", pin=1234)
+        self.driver.save()
+        self.route = Route(name="TestRoute", description="This is a test", cost=1)
+        self.TripCreator = TripCreator(driverid=self.driver.id,
+                                       routename="TestRoute")
+
+    def testTripCreate(self):
+        trip = TripCreator.starttrip()
+
+        # Check ID
+        print(trip.id)
+        # Check datetime
+        print(datetime.datetime(2012, 4, 1, 0, 0).timestamp())
+        pass
+
+    def testTripEnd(self):
+        pass

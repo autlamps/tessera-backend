@@ -13,3 +13,9 @@ class DriverAuthSerializer(serializers.Serializer):
 class DriverSerializer(serializers.Serializer):
     name = serializers.CharField()
     id = serializers.IntegerField()
+
+
+class TripSerializer(serializers.Serializer):
+    route = serializers.CharField()
+    driver = DriverSerializer()
+    id = serializers.IntegerField()

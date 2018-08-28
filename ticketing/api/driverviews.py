@@ -1,13 +1,15 @@
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
 from tessera import settings
-from ticketing.driverauth.driverauthtoken import DriverAuth, DriverAuthenticate
-from ticketing.models import Driver
+from ticketing.driverauth.driverauthtoken import DriverAuthenticate
 from ticketing.api.driverserializers import DriverSerializer, \
     DriverAuthSerializer
+from django.http import JsonResponse
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from ticketing.driverauth.driverauthtoken import DriverAuth
+from ticketing.models import Driver, Route
+from ticketing.api.driverserializers import DriverSerializer, TripSerializer
 
 
 class DriverAuthTokenView(APIView):
@@ -57,6 +59,26 @@ class KeysView(APIView):
 class TripView(APIView):
     """
     TripView creates a new trip view and returns the created trip id
+    """
+
+    def post(self, request, *args, **kwargs):
+        datain = TripView(data=request.data)
+
+        if not datain.validated_data["id"]:
+            return Response(data={"success": False})
+
+        try:
+            trip = createtrip(request.data.all()[0].name, request.data.all()[1].id)
+            trip.save()
+            serializer = TripSerializer(trip)
+            return JsonResponse(data=serializer.data)
+        except ObjectDoesNotExist:
+            return Response(data={"success": False,
+                                  "reason": "Driver not found"})
+
+class TripStopView(APIView):
+    """
+    TripViewStop stops a trip and saves the record
     """
 
     def post(self, request, *args, **kwargs):
