@@ -1,7 +1,10 @@
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from ticketing.driverauth.driverauthtoken import DriverAuth
+
+from tessera import settings
+from ticketing.driverauth.driverauthtoken import DriverAuth, DriverAuthenticate
 from ticketing.models import Driver
 from ticketing.api.driverserializers import DriverSerializer, \
     DriverAuthSerializer
@@ -41,8 +44,14 @@ class KeysView(APIView):
     KeysView returns public keys for ticket authentications
     """
 
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [DriverAuthenticate]
+
     def get(self, request, *args, **kwargs):
-        pass
+        return Response(data={
+            "success": True,
+            "public_key": settings.PUBLIC_KEY,
+        })
 
 
 class TripView(APIView):

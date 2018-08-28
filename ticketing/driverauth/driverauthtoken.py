@@ -40,12 +40,16 @@ class DriverAuth:
 
 
 class DriverAuthenticate(authentication.BaseAuthentication):
+    """
+    Header must be X-DRIVER-TOKEN
+    """
 
-    def authenticateheader(self, request):
-        username = request.META.get("X_DRIVER_TOKEN")
-        if not username:
+    def authenticate(self, request):
+        token = request.META.get("HTTP_X_DRIVER_TOKEN")
+        if not token:
             return None
         try:
-            return DriverAuth().verifytoken(username)
+            driver = DriverAuth().verifytoken(token)
+            return driver, None
         except BadTokenError:
             raise exceptions.AuthenticationFailed("Bad Token Error")
