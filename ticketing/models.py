@@ -44,6 +44,9 @@ class Driver(models.Model):
     def __str__(self):
         return self.name
 
+    def is_authenticated(self):
+        return True
+
 
 class Trip(models.Model):
     route = models.ForeignKey('Route', on_delete=models.PROTECT)
