@@ -31,7 +31,7 @@ class TicketSerializer(serializers.ModelSerializer):
         fields = ['current_value', 'qr_code', 'ttl']
 
     def get_ttl(self, obj):
-        return int(time.time()) + 43200
+        return int(time.time()) + 604800
 
     def get_qr_code(self, obj):
         return QRCode().createbtqrcode(btticket=obj)
