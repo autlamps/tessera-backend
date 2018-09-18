@@ -28,6 +28,12 @@ SECRET_KEY = os.environ.get('KEY', '')
 if SECRET_KEY == '':
     sys.exit('No secret key set!')
 
+# firebase auth
+FIREBASE_KEY = os.environ.get('FIREBASE_AUTH', '')
+
+if FIREBASE_KEY == '':
+    sys.exit('No firebase auth set!')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
