@@ -140,3 +140,6 @@ STATICFILES_DIRS = (
 
 PUBLIC_KEY = os.environ.get('PUBLIC_KEY', '')
 PRIVATE_KEY = os.environ.get('PRIVATE_KEY', '')
+
+#registration
+LOGIN_REDIRECT_URL = 'home'

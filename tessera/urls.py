@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^api/v1/drivers/', include('ticketing.url.driversapi')),
     url(r'^admin/', admin.site.urls),
     url(r'^docs/', include_docs_urls(title='Tessera API Docs')),
+    url(r'^management/', include('ticketing.url.managementurl')),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
