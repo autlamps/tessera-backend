@@ -29,7 +29,7 @@ if SECRET_KEY == '':
     sys.exit('No secret key set!')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if os.environ.get('DEBUG', '') is 'True' else False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', os.environ.get('HOSTNAME', '')]
 
