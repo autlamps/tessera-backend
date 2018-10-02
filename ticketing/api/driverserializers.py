@@ -22,3 +22,4 @@ class InputTripSerializer(serializers.Serializer):
 class TripSerializer(serializers.Serializer):
     route = serializers.CharField()
     id = serializers.IntegerField()
+    success = serializers.CharField()

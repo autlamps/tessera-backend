@@ -10,9 +10,8 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from ticketing.driverauth.driverauthtoken import DriverAuth
-from ticketing.models import Driver, Trip
+from ticketing.models import Driver, Trip, Route
 from ticketing.api.driverserializers import DriverSerializer, TripSerializer
-from ticketing.trip.createtrip import TripCreator
 
 
 class DriverAuthTokenView(APIView):
@@ -75,27 +74,36 @@ class TripView(APIView):
         if not datain.is_valid():
             return Response(data={"success": False})
 
-        route = datain.validated_data["route"]
+        route_id = datain.validated_data["route"]
+        route = Route.objects.get(pk=route_id)
 
         try:
-            tripC = TripCreator(route, driver)
-            trip = tripC.starttrip()
-            serializer = TripSerializer(trip)
-            return JsonResponse(data=serializer.data)
+            trip = Trip(route=route,
+                        driver=driver,
+                        start=datetime.now(
+                            tz=pytz.timezone('Pacific/Auckland')))
+            trip.save()
+            return JsonResponse(data={
+                "success": True,
+                "route": trip.route.id,
+                "trip_id": trip.id
+            })
         except ObjectDoesNotExist:
             return Response(data={"success": False,
                                   "reason": "Driver not found"})
 
     def delete(self, request, *args, **kwargs):
         trip_id = self.kwargs.get("trip_id")
-
         driver = request.user
 
         trip = Trip.objects.get(pk=trip_id)
-        Trip.objects.get(pk=trip_id).end = datetime.now(tz=pytz.timezone('Pacific/Auckland'))
-        serializer = TripSerializer(trip)
+        Trip.objects.get(pk=trip_id).end = datetime.now(
+            tz=pytz.timezone('Pacific/Auckland'))
+        serializer = TripSerializer(data={
+            "success": True,
+        })
 
-        return JsonResponse(data=serializer.data)
+        return JsonResponse(data=serializer.initial_data)
 
 
 class BTTripView(APIView):
