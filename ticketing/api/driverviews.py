@@ -1,15 +1,18 @@
+from datetime import datetime
+
+import pytz
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import IsAuthenticated
 from tessera import settings
 from ticketing.driverauth.driverauthtoken import DriverAuthenticate
-from ticketing.api.driverserializers import DriverSerializer, \
-    DriverAuthSerializer
+from ticketing.api.driverserializers import DriverAuthSerializer, InputTripSerializer
 from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from ticketing.driverauth.driverauthtoken import DriverAuth
-from ticketing.models import Driver, Route
+from ticketing.models import Driver, Trip
 from ticketing.api.driverserializers import DriverSerializer, TripSerializer
+from ticketing.trip.createtrip import TripCreator
 
 
 class DriverAuthTokenView(APIView):
@@ -61,28 +64,38 @@ class TripView(APIView):
     TripView creates a new trip view and returns the created trip id
     """
 
-    def post(self, request, *args, **kwargs):
-        datain = TripView(data=request.data)
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [DriverAuthenticate]
 
-        if not datain.validated_data["id"]:
+    def post(self, request, *args, **kwargs):
+        driver = request.user
+
+        datain = InputTripSerializer(data=request.data)
+
+        if not datain.is_valid():
             return Response(data={"success": False})
 
+        route = datain.validated_data["route"]
+
         try:
-            trip = createtrip(request.data.all()[0].name, request.data.all()[1].id)
-            trip.save()
+            tripC = TripCreator(route, driver)
+            trip = tripC.starttrip()
             serializer = TripSerializer(trip)
             return JsonResponse(data=serializer.data)
         except ObjectDoesNotExist:
             return Response(data={"success": False,
                                   "reason": "Driver not found"})
 
-class TripStopView(APIView):
-    """
-    TripViewStop stops a trip and saves the record
-    """
+    def delete(self, request, *args, **kwargs):
+        trip_id = self.kwargs.get("trip_id")
 
-    def post(self, request, *args, **kwargs):
-        pass
+        driver = request.user
+
+        trip = Trip.objects.get(pk=trip_id)
+        Trip.objects.get(pk=trip_id).end = datetime.now(tz=pytz.timezone('Pacific/Auckland'))
+        serializer = TripSerializer(trip)
+
+        return JsonResponse(data=serializer.data)
 
 
 class BTTripView(APIView):

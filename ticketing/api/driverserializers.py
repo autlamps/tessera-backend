@@ -15,7 +15,10 @@ class DriverSerializer(serializers.Serializer):
     id = serializers.IntegerField()
 
 
+class InputTripSerializer(serializers.Serializer):
+    route = serializers.CharField()
+
+
 class TripSerializer(serializers.Serializer):
     route = serializers.CharField()
-    driver = DriverSerializer()
     id = serializers.IntegerField()
