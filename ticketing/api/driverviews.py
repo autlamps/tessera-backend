@@ -93,17 +93,14 @@ class TripView(APIView):
                                   "reason": "Driver not found"})
 
     def delete(self, request, *args, **kwargs):
+        # breaking rest semantics here but YOLO
         trip_id = self.kwargs.get("trip_id")
-        driver = request.user
 
         trip = Trip.objects.get(pk=trip_id)
-        Trip.objects.get(pk=trip_id).end = datetime.now(
-            tz=pytz.timezone('Pacific/Auckland'))
-        serializer = TripSerializer(data={
-            "success": True,
-        })
+        trip.end = datetime.now(tz=pytz.timezone('Pacific/Auckland'))
+        trip.save()
 
-        return JsonResponse(data=serializer.initial_data)
+        return JsonResponse(data={"success": True})
 
 
 class BTTripView(APIView):

@@ -3,7 +3,9 @@ import pytz
 from datetime import datetime
 
 from django.contrib.auth.models import User
-from django.test import TestCase, Client
+from django.test import TestCase
+from rest_framework.test import APIClient
+
 from ticketing.models import Driver, Route, Trip
 from ticketing.driverauth.driverauthtoken import DriverAuth
 
@@ -27,26 +29,27 @@ class TripTest(TestCase):
                              tz=pytz.timezone('Pacific/Auckland')))
         self.trip.save()
 
-        self.client = Client()
-        self.client.login(username="bobbytables", password="fakepassword")
+        self.client = APIClient()
+        self.client.credentials(HTTP_X_DRIVER_TOKEN=self.token)
 
     def test_CreateTrip(self):
-        print(self.token)
-        response = self.client.post('/api/v1/drivers/trips/', json={'route': 0},
-                                    headers={'HTTP_X_DRIVER_TOKEN': self.token})
+        response = self.client.post('/api/v1/drivers/trips/',
+                                    {'route': self.route.id},
+                                    format='json')
 
         if response.status_code != 200:
-            self.fail("Was unable to create a trip, got status code "+
+            self.fail("Was unable to create a trip, got status code " +
                       str(response.status_code))
 
     def test_StopTrip(self):
-        response = self.client.delete('api/v1/drivers/trips/'+str(self.trip.id),
-                                      headers={'HTTP_X_DRIVER_TOKEN':
-                                      self.token})
+        response = self.client.delete('/api/v1/drivers/trips' +
+                                      '/{}/'.format(self.trip.id))
 
         if response.status_code != 200:
-             self.fail("Was unable to stop a trip, got status code "
+            self.fail("Was unable to stop a trip, got status code "
                               + str(response.status_code))
+
+        self.trip.refresh_from_db()
 
         if self.trip.end is None:
             self.fail("The end time of the trip was not found")
