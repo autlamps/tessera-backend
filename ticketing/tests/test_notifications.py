@@ -1,5 +1,5 @@
 import json
-from asyncio.test_utils import TestCase
+from django.test import TestCase
 
 from django.contrib.auth.models import User
 from rest_framework.test import APIRequestFactory, force_authenticate
@@ -17,7 +17,7 @@ class CreateNotificationTestCase(TestCase):
         self.factory = APIRequestFactory()
         self.view = NotificationView.as_view()
 
-    def test_create_notification(self):
+    def testCreateNotification(self):
         req = self.factory.post('/api/v1/users/notifications/',
                                 {"token": "1234"}, format='json')
 
