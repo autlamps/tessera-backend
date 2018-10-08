@@ -7,8 +7,12 @@ from ticketing.models import Driver
 class DriverIdTestCase(TestCase):
 
     def setUp(self):
-        self.driver = Driver(name="Bobby Tables", pin=1234)
-        self.driver.save()
+        # Driver.objects.all().delete()
+        try:
+            self.driver = Driver.objects.get(id=1)
+        except Driver.DoesNotExist:
+            self.driver = Driver(name="Bobby Tables", pin=1234)
+            self.driver.save()
 
     def test_create_token(self):
         auth = DriverAuth(secret_key="thisisatest")
@@ -23,8 +27,8 @@ class DriverIdTestCase(TestCase):
             verify = auth.verifytoken("MS45LU03aF9sUVVDVEZYV"
                                       "DRDOGZ5WFF0TlhYMVk=")
             if verify.id != self.driver.id:
-                self.fail("Driver id is different expected: " + verify.id +
-                          " got: " + self.driver.id)
+                self.fail("Driver id is different expected: " +
+                          "{} got: {}".format(verify.id, self.driver.id))
             else:
                 pass
         except BadTokenError:
