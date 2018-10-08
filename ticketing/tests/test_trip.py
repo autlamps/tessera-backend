@@ -47,7 +47,7 @@ class TripTest(TestCase):
 
         if response.status_code != 200:
             self.fail("Was unable to stop a trip, got status code "
-                              + str(response.status_code))
+                      + str(response.status_code))
 
         self.trip.refresh_from_db()
 

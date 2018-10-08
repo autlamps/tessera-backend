@@ -5,7 +5,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import IsAuthenticated
 from tessera import settings
 from ticketing.driverauth.driverauthtoken import DriverAuthenticate
-from ticketing.api.driverserializers import DriverAuthSerializer, InputTripSerializer
+from ticketing.api.driverserializers import DriverAuthSerializer, \
+    InputTripSerializer
 from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView

@@ -10,7 +10,7 @@ driversapi.py sets up urls for the user api used by the passenger apps
 
 urlpatterns = [
     path('authtokens/', DriverAuthTokenView.as_view(),
-        name="driverauthtokenview"),
+         name="driverauthtokenview"),
     path('ping/', PingView.as_view(), name='pingview'),
     path('keys/', KeysView.as_view(), name='keysview'),
     path('routes/', RouteView.as_view(), name='routeview'),
