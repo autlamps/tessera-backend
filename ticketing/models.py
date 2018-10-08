@@ -52,7 +52,7 @@ class Trip(models.Model):
     route = models.ForeignKey('Route', on_delete=models.PROTECT)
     driver = models.ForeignKey('Driver', on_delete=models.PROTECT)
     start = models.DateTimeField()
-    end = models.DateTimeField()
+    end = models.DateTimeField(null=True)
 
     def __str__(self):
         return self.route.name + "-" + self.driver.name

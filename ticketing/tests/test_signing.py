@@ -5,13 +5,17 @@ import rsa
 from django.contrib.auth.models import User
 
 from tessera import settings
-from ticketing.models import Account, BalanceTicket
+
+from ticketing.models import Account, BalanceTicket, Driver, Route
 from ticketing.userticket.createqrcode import QRCode
 
 
 class SignTestCase(TestCase):
 
     def setUp(self):
+        User.objects.all().delete()
+        BalanceTicket.objects.all().delete()
+
         self.qrfactory = QRCode(testing=True)
         (pubKey, privKey) = rsa.newkeys(512)
         self.qrfactory.private = privKey
