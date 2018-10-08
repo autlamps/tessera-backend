@@ -115,6 +115,13 @@ class BTTripView(APIView):
 
     def post(self, request, *args, **kwargs):
         data = CreateTripSerializer(data=request.data)
+
+        if not data.is_valid():
+            return Response(data={
+                "success": False,
+                "reason": "Data not valid"
+            })
+
         qr = data.validated_data["qr_code"]
         trip_id = data.validated_data["trip_id"]
 
