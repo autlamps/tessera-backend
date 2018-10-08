@@ -13,6 +13,9 @@ from ticketing.userticket.createqrcode import QRCode
 class SignTestCase(TestCase):
 
     def setUp(self):
+        User.objects.all().delete()
+        BalanceTicket.objects.all().delete()
+
         self.qrfactory = QRCode(testing=True)
         (pubKey, privKey) = rsa.newkeys(512)
         self.qrfactory.private = privKey
