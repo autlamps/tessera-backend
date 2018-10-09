@@ -3,16 +3,16 @@ from datetime import datetime
 import pytz
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import IsAuthenticated
-from tessera import settings
-from ticketing.driverauth.driverauthtoken import DriverAuthenticate
-from ticketing.api.driverserializers import DriverAuthSerializer, \
-    InputTripSerializer
 from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from ticketing.driverauth.driverauthtoken import DriverAuth
-from ticketing.models import Driver, Trip, Route
-from ticketing.api.driverserializers import DriverSerializer, TripSerializer
+
+from tessera import settings
+from ticketing.driverauth.driverauthtoken import DriverAuth, DriverAuthenticate
+from ticketing.models import Driver, Trip, BalanceTicketTrip, Route
+from ticketing.api.driverserializers import DriverSerializer, \
+    DriverAuthSerializer, CreateTripSerializer, InputTripSerializer
+from ticketing.userticket.createqrcode import QRCode, VerifyFailedError
 
 
 class DriverAuthTokenView(APIView):
@@ -108,11 +108,65 @@ class BTTripView(APIView):
     """
     BTTrip is called by the driver device to "tag" someone on
 
-    THIS MUST BE IDEMPOTENT
+    THIS MUST BE IDEMPOTENT (it's not at this point :( )
     """
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [DriverAuthenticate]
 
     def post(self, request, *args, **kwargs):
-        pass
+        data = CreateTripSerializer(data=request.data)
+
+        if not data.is_valid():
+            return Response(data={
+                "success": False,
+                "reason": "Data not valid"
+            })
+
+        qr = data.validated_data["qr_code"]
+        trip_id = data.validated_data["trip_id"]
+
+        try:
+            trip = Trip.objects.get(pk=trip_id)
+        except Trip.DoesNotExist:
+            return Response(data={
+                "success": False,
+                "reason": "Trip doesn't exist"
+            })
+
+        try:
+            verified = QRCode().verify(qr)
+            ticket = verified["ticket"]
+
+            # allow users to go negative but if they're already
+            # negative no further
+            if ticket.current_value > 0:
+                prev_bal = ticket.current_value
+                post_bal = ticket.current_value - trip.route.cost
+
+                btt = BalanceTicketTrip(trip=trip,
+                                        ticket=ticket,
+                                        pre_bal=prev_bal,
+                                        post_bal=post_bal)
+
+                ticket.current_value = post_bal
+
+                ticket.save()
+                btt.save()
+
+                return Response(data={
+                    "success": True,
+                    "user_current_bal": ticket.current_value
+                })
+            else:
+                return Response(data={
+                    "success": False,
+                    "reason": "Insufficient funds."
+                })
+        except VerifyFailedError:
+            return Response(data={
+                "success": False,
+                "reason": "QR Code Invalid"
+            })
 
     def delete(self, request, *args, **kwargs):
         pass
